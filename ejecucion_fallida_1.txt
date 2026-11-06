@@ -1,0 +1,9 @@
+== Carga del almacen de consumo de agua CDMX ==
+Base: data_warehouse   Usuario: postgres   2026-11-05 22:29:04
+[PASO 1/6] Preparar el esquema "carga" y vaciarlo (asi la carga es repetible)
+[PASO 2/6] Lectura masiva de los dos CSV con COPY
+psql:<stdin>:75577: ERROR:  invalid input syntax for type numeric: "NA"
+CONTEXT:  COPY stg_consumo, line 3398, column consumo_total_mixto: "NA"
+
+FALLO LA CARGA. Se revirtio la transaccion: no quedo ningun renglon a medias.
+El paso que fallo es el ultimo '[PASO n/6]' impreso arriba; el motivo es el mensaje ERROR de PostgreSQL.

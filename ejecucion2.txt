@@ -1,0 +1,44 @@
+== Carga del almacen de consumo de agua CDMX ==
+Base: data_warehouse   Usuario: postgres   2026-11-05 22:32:50
+[PASO 1/6] Preparar el esquema "carga" y vaciarlo (asi la carga es repetible)
+psql:<stdin>:11: NOTICE:  schema "carga" already exists, skipping
+psql:<stdin>:20: NOTICE:  relation "dim_indice_des" already exists, skipping
+psql:<stdin>:33: NOTICE:  relation "dim_ubicacion" already exists, skipping
+psql:<stdin>:44: NOTICE:  relation "dim_tiempo" already exists, skipping
+psql:<stdin>:62: NOTICE:  relation "fact_consumo_agua" already exists, skipping
+psql:<stdin>:75: NOTICE:  relation "fact_clima" already exists, skipping
+psql:<stdin>:85: NOTICE:  relation "stg_clima" already exists, skipping
+psql:<stdin>:105: NOTICE:  relation "stg_consumo" already exists, skipping
+psql:<stdin>:115: NOTICE:  relation "rechazos" already exists, skipping
+[PASO 2/6] Lectura masiva de los dos CSV con COPY
+[PASO 3/6] COPY terminado: renglones leidos y tiempo
+ renglones_clima | renglones_consumo | segundos_copy 
+-----------------+-------------------+---------------
+            4344 |             71102 |         0.565
+(1 row)
+
+[PASO 4/6] Referencia: INSERT renglon por renglon vs COPY
+ seg_2000_inserts_sueltos | seg_estimados_todo_el_archivo | veces_mas_lento_que_copy 
+--------------------------+-------------------------------+--------------------------
+                    0.562 |                          20.0 |                     35.4
+(1 row)
+
+[PASO 5/6] Validar restricciones, registrar rechazos y cargar (dimensiones antes que hechos)
+[PASO 6/6] Resumen por tabla (insertados y rechazados)
+       tabla       | insertados | rechazados 
+-------------------+------------+------------
+ dim_indice_des    |          4 |          0
+ dim_tiempo        |        181 |          0
+ dim_ubicacion     |       1553 |          0
+ fact_consumo_agua |      70886 |        216
+ fact_clima        |        181 |          0
+(5 rows)
+
+Rechazos por restriccion (detalle en la tabla carga.rechazos):
+       tabla       |       restriccion       | renglones 
+-------------------+-------------------------+-----------
+ fact_consumo_agua | ck_etiqueta_territorial |       216
+(1 row)
+
+CARGA COMPLETA: transaccion confirmada.
+Duracion total del script: 4 s
