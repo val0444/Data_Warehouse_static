@@ -1,17 +1,26 @@
 == Carga del almacen de consumo de agua CDMX ==
-Base: data_warehouse   Usuario: postgres   2026-11-05 22:32:44
+Base: data_warehouse   Usuario: postgres   2026-11-05 22:34:05
 [PASO 1/6] Preparar el esquema "carga" y vaciarlo (asi la carga es repetible)
+psql:<stdin>:11: NOTICE:  schema "carga" already exists, skipping
+psql:<stdin>:20: NOTICE:  relation "dim_indice_des" already exists, skipping
+psql:<stdin>:33: NOTICE:  relation "dim_ubicacion" already exists, skipping
+psql:<stdin>:44: NOTICE:  relation "dim_tiempo" already exists, skipping
+psql:<stdin>:62: NOTICE:  relation "fact_consumo_agua" already exists, skipping
+psql:<stdin>:75: NOTICE:  relation "fact_clima" already exists, skipping
+psql:<stdin>:85: NOTICE:  relation "stg_clima" already exists, skipping
+psql:<stdin>:105: NOTICE:  relation "stg_consumo" already exists, skipping
+psql:<stdin>:115: NOTICE:  relation "rechazos" already exists, skipping
 [PASO 2/6] Lectura masiva de los dos CSV con COPY
 [PASO 3/6] COPY terminado: renglones leidos y tiempo
  renglones_clima | renglones_consumo | segundos_copy 
 -----------------+-------------------+---------------
-            4344 |             71102 |         0.596
+            4344 |             71102 |         0.544
 (1 row)
 
 [PASO 4/6] Referencia: INSERT renglon por renglon vs COPY
  seg_2000_inserts_sueltos | seg_estimados_todo_el_archivo | veces_mas_lento_que_copy 
 --------------------------+-------------------------------+--------------------------
-                    0.576 |                          20.5 |                     34.4
+                    0.534 |                          19.0 |                     34.9
 (1 row)
 
 [PASO 5/6] Validar restricciones, registrar rechazos y cargar (dimensiones antes que hechos)

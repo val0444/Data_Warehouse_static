@@ -1,5 +1,5 @@
 == Carga del almacen de consumo de agua CDMX ==
-Base: data_warehouse   Usuario: postgres   2026-11-05 22:32:50
+Base: data_warehouse   Usuario: postgres   2026-11-05 22:34:17
 [PASO 1/6] Preparar el esquema "carga" y vaciarlo (asi la carga es repetible)
 psql:<stdin>:11: NOTICE:  schema "carga" already exists, skipping
 psql:<stdin>:20: NOTICE:  relation "dim_indice_des" already exists, skipping
@@ -14,13 +14,13 @@ psql:<stdin>:115: NOTICE:  relation "rechazos" already exists, skipping
 [PASO 3/6] COPY terminado: renglones leidos y tiempo
  renglones_clima | renglones_consumo | segundos_copy 
 -----------------+-------------------+---------------
-            4344 |             71102 |         0.565
+            4344 |             71102 |         0.594
 (1 row)
 
 [PASO 4/6] Referencia: INSERT renglon por renglon vs COPY
  seg_2000_inserts_sueltos | seg_estimados_todo_el_archivo | veces_mas_lento_que_copy 
 --------------------------+-------------------------------+--------------------------
-                    0.562 |                          20.0 |                     35.4
+                    0.593 |                          21.1 |                     35.4
 (1 row)
 
 [PASO 5/6] Validar restricciones, registrar rechazos y cargar (dimensiones antes que hechos)
